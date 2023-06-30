@@ -47,7 +47,7 @@ function getComposition(f, g) {
  *
  */
 function getPowerFunction(exponent) {
-  return function (x) {
+  return function powerFunction(x) {
     return x ** exponent;
   };
 }
@@ -71,7 +71,7 @@ function getPolynom(...coefficients) {
     return null;
   }
 
-  return function (x) {
+  return function polynomial(x) {
     let result = 0;
     for (let i = 0; i < coefficients.length; i += 1) {
       result += coefficients[i] * (x ** (coefficients.length - 1 - i));
@@ -98,7 +98,7 @@ function getPolynom(...coefficients) {
 function memoize(func) {
   const cache = {};
 
-  return function (...args) {
+  return function f(...args) {
     const key = JSON.stringify(args);
 
     if (Object.prototype.hasOwnProperty.call(cache, key)) {
@@ -129,7 +129,7 @@ function memoize(func) {
  * retryer() => 2
  */
 function retry(func, attempts) {
-  return function () {
+  return function f() {
     let result;
     for (let i = 0; i < attempts; i += 1) {
       try {
@@ -186,7 +186,7 @@ function logger(/* func, logFunc */) {
  *   partialUsingArguments(fn, 'a','b','c','d')() => 'abcd'
  */
 function partialUsingArguments(fn, ...args1) {
-  return function (...args2) {
+  return function f(...args2) {
     return fn(...args1, ...args2);
   };
 }
@@ -212,7 +212,7 @@ function partialUsingArguments(fn, ...args1) {
 function getIdGeneratorFunction(startFrom) {
   let nextId = startFrom;
 
-  return function () {
+  return function f() {
     const currentId = nextId;
     nextId += 1;
     return currentId;
