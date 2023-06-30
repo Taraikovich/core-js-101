@@ -299,9 +299,25 @@ function reverseInteger(num) {
  *   5436468789016589 => false
  *   4916123456789012 => false
  */
-function isCreditCardNumber(/* ccn */) {
-  throw new Error('Not implemented');
+function isCreditCardNumber(ccn) {
+  const ccnString = ccn.toString();
+  const reversedDigits = ccnString.split('').reverse();
+  let sum = 0;
+
+  for (let i = 0; i < reversedDigits.length; i += 1) {
+    let digit = parseInt(reversedDigits[i], 10);
+    if (i % 2 === 1) {
+      digit *= 2;
+      if (digit > 9) {
+        digit -= 9;
+      }
+    }
+    sum += digit;
+  }
+
+  return sum % 10 === 0;
 }
+
 
 /**
  * Returns the digital root of integer:
@@ -345,8 +361,27 @@ function getDigitalRoot(num) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+function isBracketsBalanced(str) {
+  const openingBrackets = ['[', '(', '{', '<'];
+  const closingBrackets = [']', ')', '}', '>'];
+  const stack = [];
+
+  for (let i = 0; i < str.length; i += 1) {
+    const char = str[i];
+
+    if (openingBrackets.includes(char)) {
+      stack.push(char);
+    } else if (closingBrackets.includes(char)) {
+      const lastOpeningBracket = stack.pop();
+      const expectedClosingBracket = closingBrackets[openingBrackets.indexOf(lastOpeningBracket)];
+
+      if (char !== expectedClosingBracket) {
+        return false;
+      }
+    }
+  }
+
+  return stack.length === 0;
 }
 
 
@@ -387,8 +422,24 @@ function toNaryString(num, n) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  const directoryParts = pathes.map((path) => path.split('/'));
+
+  const minLength = Math.min(...directoryParts.map((parts) => parts.length));
+
+  let commonPath = '';
+
+  for (let i = 0; i < minLength; i += 1) {
+    const isCommon = directoryParts.every((parts) => parts[i] === directoryParts[0][i]);
+
+    if (isCommon) {
+      commonPath += `${directoryParts[0][i]}/`;
+    } else {
+      break;
+    }
+  }
+
+  return commonPath;
 }
 
 
@@ -410,8 +461,31 @@ function getCommonDirectoryPath(/* pathes */) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  const rows1 = m1.length;
+  const cols1 = m1[0].length;
+  const rows2 = m2.length;
+  const cols2 = m2[0].length;
+
+  if (cols1 !== rows2) {
+    throw new Error('Invalid matrix sizes');
+  }
+
+  const result = [];
+
+  for (let i = 0; i < rows1; i += 1) {
+    result[i] = [];
+
+    for (let j = 0; j < cols2; j += 1) {
+      result[i][j] = 0;
+
+      for (let k = 0; k < cols1; k += 1) {
+        result[i][j] += m1[i][k] * m2[k][j];
+      }
+    }
+  }
+
+  return result;
 }
 
 
@@ -445,8 +519,41 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  function checkLine(a, b, c) {
+    if (a === b && b === c) {
+      return a;
+    }
+    return undefined;
+  }
+
+  let winner;
+  const diagonal1 = [];
+  const diagonal2 = [];
+
+  for (let i = 0; i < 3; i += 1) {
+    winner = checkLine(position[i][0], position[i][1], position[i][2]);
+    if (winner) break;
+
+    const column = [];
+    for (let j = 0; j < 3; j += 1) {
+      column.push(position[j][i]);
+    }
+    winner = checkLine(column[0], column[1], column[2]);
+    if (winner) break;
+
+    diagonal1.push(position[i][i]);
+    diagonal2.push(position[i][2 - i]);
+  }
+
+  if (!winner) {
+    winner = checkLine(diagonal1[0], diagonal1[1], diagonal1[2]);
+  }
+  if (!winner) {
+    winner = checkLine(diagonal2[0], diagonal2[1], diagonal2[2]);
+  }
+
+  return winner;
 }
 
 
